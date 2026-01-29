@@ -143,8 +143,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'netflixapp:Home'
-ACCOUNT_AUTHENTICATION_METHOD='email'
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_LOGIN_METHODS = {'email'}
+
+ACCOUNT_SIGNUP_FIELDS = [
+    'email*',
+    'password1*',
+    'password2*',
+]
+
+
+
 ACCOUNT_EMAIL_VERIFICATION='none'
-ACCOUNT_USERNAME_REQUIRED=False
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

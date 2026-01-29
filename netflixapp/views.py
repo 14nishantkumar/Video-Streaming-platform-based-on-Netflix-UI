@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from . forms import ProfileForm
 from . models import Profile, Movie
 
-class Home(View):
+class home(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('netflixapp:profile-list')
@@ -49,17 +49,28 @@ class MovieList(View):
     def get(self, request, profile_id, *args, **kwargs):
         try:
             profile = Profile.objects.get(uuid=profile_id)
-            movies = Movie.objects.filter(age_limit=profile.age_limit)
+
+            # Security check: profile must belong to logged-in user
             if profile not in request.user.profiles.all():
                 return redirect('netflixapp:profile-list')
 
+            # Filter movies based on profile age limit
+            movies = Movie.objects.filter(age_limit=profile.age_limit)
+
+            # ⭐ Latest movie for hero section
+            latest_movie = movies.order_by('-created').first()
+
             context = {
-            'movies':movies
+                'movies': movies,
+                'latest_movie': latest_movie,
+                'profile': profile,
             }
 
             return render(request, 'movielist.html', context)
+
         except Profile.DoesNotExist:
             return redirect('netflixapp:profile-list')
+
 
 method_decorator(login_required, name='dispatch')
 class MovieDetail(View):

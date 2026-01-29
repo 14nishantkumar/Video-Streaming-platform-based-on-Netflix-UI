@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<body>
+
+    <div class="upper">
+        <br><br><br><br><br>
+
+        <div class="login-div">
+            <form class="login" method="POST" action="{% url 'account_logout' %}">
+                
+                {% csrf_token %}
+
+                <h1>Sign Out</h1>
+
+                <div class=" text-center my-4">
+                    <p class="color_text">
+                        Are you sure you want to sign out?
+                    </p>
+                </div>
+
+                <div>
+                    <button type="submit" class="signin-button">
+                        Sign Out
+                    </button>
+                </div>
+
+                <div class="new-members" style="margin-top: 15px;">
+                    <small>
+                        Changed your mind?
+                        <a href="/" class="signup-link">Go back</a>
+                    </small>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+
+{% endblock content %}
