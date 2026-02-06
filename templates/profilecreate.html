@@ -2,33 +2,122 @@
 {% load static %}
 
 {% block content %}
-    <section class='bg-primary_black min-h-screen py-20 md:py-32 flex-col flex items-center' style="background-image: url('assets/background_netflix.jpg');">
-        <div class="flex flex-wrap justify-center  w-10/12  md:w-6/12">
-            <form class="w-full md:w-8/12 bg-gray-900 p-5 rounded-lg" method="POST">{% csrf_token %}
-                <h1 class="text-4xl text-center text-gray-100 font-medium">
-                    Create A Profile
-                </h1>
-                <div class="my-4"> 
-                    <Label class='text-lg text-gray-200 font-medium mb-3'>
-                        Profile Name
-                    </Label>
-                    <input required class="p-2 bg-gray-500 rounded-sm text-gray-200 outline-none block w-full" type="text" name="name" id="id_name" placeholder="Profile name">
-                </div>
-                <div class="my-4"> 
-                    <Label class='text-lg text-gray-200 font-medium mb-3'>
-                        Maturity Level
-                    </Label>
-                    <select class="p-2 bg-gray-500 rounded-sm text-gray-200 outline-none block w-full"  name="age_limit" id="id_age_limit" >
-                        <option value="All">All</option>
-                        <option value="Kids">Kids</option>
-                       
-                    </select>
-                </div>
-                <div class="flex justify-center items-center">
-                    <button class="px-4 py-2 rounded-md outline-none bg-primary_red text-gray-100" type="submit">Create Profile</button>
-                </div>
-            </form> 
-        </div>
+<section class=" min-h-screen flex flex-col justify-center items-center"
+    style="background-image: url('assets/background_netflix.jpg'); background-size: cover;">
+    <h2>Add Profile</h2>
+
+    <form method="POST" action="{% url 'netflixapp:create-profile' %}">
+        {% csrf_token %}
+
         
-    </section>
-    {% endblock content %}
+        <input type="text" name="name" placeholder="Profile Name" required>
+
+      
+        <input type="number" name="age" placeholder="Age" required>
+
+        
+        <select name="age_limit" required>
+            <option value="All">All</option>
+            <option value="Kids">Kids</option>
+        </select>
+
+        
+        <div class="form-buttons">
+            <button type="submit">Save Profile</button>
+            <a href="{% url 'netflixapp:profile-list' %}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+    <style>
+        /* General form container */
+        form {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Heading */
+        h2 {
+            text-align: center;
+            font-weight: 500;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #f3f4f6;
+            /* gray-100 */
+        }
+
+        /* Input fields */
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background-color: #1f2937;
+            /* gray-800 */
+            color: #f9fafb;
+            /* text-white */
+            border: none;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+            /* gray-400 */
+        }
+
+        input:focus,
+        select:focus {
+            box-shadow: 0 0 0 2px #dc2626;
+            /* red-600 */
+        }
+
+        /* Buttons container */
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Save button */
+        button[type="submit"] {
+            flex: 1;
+            background-color: #dc2626;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #b91c1c;
+            /* darker red */
+        }
+
+        /* Cancel link */
+        a.cancel-btn {
+            flex: 1;
+            border: 1px solid #9ca3af;
+            color: #d1d5db;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        a.cancel-btn:hover {
+            background-color: #374151;
+            /* gray-700 */
+            color: #f3f4f6;
+        }
+    </style>
+</section>
+{% endblock %}

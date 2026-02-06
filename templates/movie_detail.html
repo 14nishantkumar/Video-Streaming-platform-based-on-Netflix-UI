@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class=" w-full text-white pt-20 md:pt-24" style="margin-top: 100px;">
+
+    <div class="container mx-auto px-4">
+
+        
+        <section
+            class="flex flex-col md:flex-row items-start md:items-center p-6 md:p-8 space-y-6 md:space-y-0 md:space-x-8 bg-gray-900 rounded-lg shadow-lg max-w-5xl mx-auto">
+            <!-- Poster -->
+            <div
+                class="flex-shrink-0 w-36 sm:w-40 md:w-44 lg:w-48 h-56 sm:h-64 md:h-72 lg:h-80 rounded-md overflow-hidden shadow-lg">
+                {% if movie.image %}
+                <img src="{{ movie.image.url }}" alt="{{ movie.title }}" class="w-full h-full object-cover">
+                {% elif movie.poster_path %}
+                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}"
+                    class="w-full h-full object-cover">
+                {% else %}
+                <div class="bg-gray-800 w-full h-full flex items-center justify-center">No Image</div>
+                {% endif %}
+            </div>
+
+           
+            <div class="flex-1">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ movie.title }}</h1>
+                <p class="text-gray-300 mb-4">{{ movie.overview|truncatechars:500 }}</p>
+
+                <div class="flex flex-wrap space-x-4 mb-4">
+                    <span class="bg-gray-700 bg-opacity-70 py-1 px-3 rounded-md">
+                        Rating: {{ movie.vote_average|default:"N/A" }}
+                    </span>
+
+                    {% if movie.release_date %}
+                    <span class="bg-gray-700 bg-opacity-70 py-1 px-3 rounded-md">
+                        Release: {{ movie.release_date }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+
+
+        <section class="mt-8 p-6 flex flex-col items-center">
+            {% if user.is_authenticated %}
+            {% if trailer_key %}
+            <div class="w-full md:w-3/4 lg:w-2/3 h-64 md:h-[500px] mb-6">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/{{ trailer_key }}"
+                    title="Trailer for {{ movie.title }}" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+            {% else %}
+            <p class="text-center text-gray-400 text-lg md:text-xl">Trailer not available</p>
+            {% endif %}
+
+            
+            {% if movie.video.exists %}
+            <div class="w-full md:w-3/4 lg:w-2/3 h-64 md:h-[500px]">
+                <video controls class="w-full h-full rounded-md shadow-lg">
+                    {% for v in movie.video.all %}
+                    <source src="{{ v.file.url }}" type="video/mp4">
+                    {% endfor %}
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <p class="text-center text-red-500 font-semibold text-lg md:text-xl">
+                Login to watch the trailer and movie
+            </p>
+            {% endif %}
+        </section>
+
+        
+        <section class="mt-8 flex justify-center">
+            {% if profile %}
+            <a href="{% url 'netflixapp:movie-list' profile.uuid %}"
+                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md transition">
+                ← Back to Home
+            </a>
+            {% endif %}
+        </section>
+
+    </div>
+</main>
+{% endblock content %}

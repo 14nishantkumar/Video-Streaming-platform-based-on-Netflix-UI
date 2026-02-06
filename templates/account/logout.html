@@ -4,6 +4,7 @@
 {% block content %}
 
 <!DOCTYPE html>
+
 <body>
 
     <div class="upper">
@@ -11,7 +12,7 @@
 
         <div class="login-div">
             <form class="login" method="POST" action="{% url 'account_logout' %}">
-                
+
                 {% csrf_token %}
 
                 <h1>Sign Out</h1>
@@ -30,8 +31,13 @@
 
                 <div class="new-members" style="margin-top: 15px;">
                     <small>
-                        Changed your mind?
-                        <a href="/" class="signup-link">Go back</a>
+                        {% if user.is_authenticated and profile %}
+                        Change your mind?
+                        <a href="{% url 'netflixapp:movie-list' profile_uuid=profile.uuid %}" class="signup-link">
+                            Go back
+                        </a>
+                        {% endif %}
+
                     </small>
                 </div>
 
@@ -40,6 +46,7 @@
     </div>
 
 </body>
+
 </html>
 
 {% endblock content %}

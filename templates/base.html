@@ -11,12 +11,13 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
     integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet" />
-  <title>Netflix NG - Watch TV Shows Online, Watch Movies Online</title>
+  <title>Netflix - Watch TV Shows Online, Watch Movies Online</title>
   <link rel="icon" href="http://pngimg.com/uploads/netflix/small/netflix_PNG15.png">
 </head>
 
@@ -24,48 +25,52 @@
   <header>
     <nav class="navbar">
       <div class="navbar__brand">
-        {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'profiles' %}
-        <img src="https://www.freepnglogos.com/uploads/netflix-logo-0.png" alt="logo" class="brand__logo" />
 
-        {% else %}
-
-        {% if user.is_authenticated %}
-        <a href="{% url 'netflixapp:profile-list' %}">
-          <img src="https://www.freepnglogos.com/uploads/netflix-logo-0.png" alt="logo" class="brand__logo" />
+        {% if user.is_authenticated and profile %}
+        <a href="{% url 'netflixapp:home' profile.uuid %}">
+          <img src="https://www.freepnglogos.com/uploads/netflix-logo-0.png" class="brand__logo" />
         </a>
         {% else %}
-        <a href="{% url 'netflixapp:home' %}">
-          <img src="https://www.freepnglogos.com/uploads/netflix-logo-0.png" alt="logo" class="brand__logo" />
+        <a href="{% url 'netflixapp:landing' %}">
+          <img src="https://www.freepnglogos.com/uploads/netflix-logo-0.png" class="brand__logo" />
         </a>
         {% endif %}
 
-        {% endif %}
       </div>
 
 
+      <!-- //////////////////////////////////////////////////////////////////////////////////// -->
+      {% if user.is_authenticated and request.resolver_match.url_name != "profile-list" %}
+      <div style="color:white;">
+        <a href="{% url 'netflixapp:profile-list' %}"
+          style="display:inline-block; background:#e50914; color:white; padding:10px 20px; border-radius:25px; font-weight:bold; text-decoration:none; box-shadow:0 4px 6px rgba(0,0,0,0.3); transition:all 0.3s ease;"
+          onmouseover="this.style.background='#b20710'; this.style.transform='scale(1.05)';"
+          onmouseout="this.style.background='#e50914'; this.style.transform='scale(1)';">
+          🔄 Change Profile
+        </a>
+      </div>
+      {% endif %}
+      <!-- //////////////////////////////////////////////////////////////////////////////// -->
+
+
       <div class="navbar__nav__items">
-        <div class="nav__item">
-          <div class="dropdown__container">
-            <i class="fas fa-globe"></i>
-            <select name="languages" id="languagesSelect" class="language__drop__down">
-              <option style=" color: black; " value="english" selected>English</option>
-              <option style=" color: black; " value="hindi">Afrikaan</option>
-              <option style=" color: black; " value="hindi">Korean</option>
-              <option style=" color: black; " value="hindi">French</option>
-              <option style="    color: black; " value="hindi">Spanish</option>
-              <option style=" color: black; " value="hindi">Chinnese</option>
-            </select>
-          </div>
+        <div class="dropdown__container">
+          <i class="fas fa-globe"></i>
+          <select name="languages" id="languagesSelect" class="language__drop__down">
+            <option style=" color: black; " value="english" selected>English</option>
+            <option style=" color: black; " value="hindi">Afrikaan</option>
+            <option style=" color: black; " value="hindi">Korean</option>
+            <option style=" color: black; " value="hindi">French</option>
+            <option style="    color: black; " value="hindi">Spanish</option>
+            <option style=" color: black; " value="hindi">Chinnese</option>
+          </select>
         </div>
-        {% if not request.user.is_authenticated %}
-        <div class="nav__item">
-          <a href="{% url 'account_login' %}" class="signin__button">Sign in</a>
-        </div>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'account_login' %}" class="signin__button">Sign in</a>
         {% else %}
-        <div>
-          <a class="signin__button" href="{% url 'account_logout' %}">Logout</a>
-        </div>
+        <a href="{% url 'account_logout' %}" class="signin__button">Logout</a>
         {% endif %}
+
       </div>
     </nav>
   </header>

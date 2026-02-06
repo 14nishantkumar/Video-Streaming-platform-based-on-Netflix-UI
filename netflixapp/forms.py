@@ -4,4 +4,4 @@ from netflixapp.models import Profile
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        exclude = ['uuid']
+        fields=['name','age','age_limit']

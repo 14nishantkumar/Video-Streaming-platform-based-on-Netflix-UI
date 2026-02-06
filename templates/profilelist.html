@@ -2,27 +2,119 @@
 {% load static %}
 
 {% block content %}
-    <section class='bg-primary_black min-h-screen py-20 md:py-0 flex-col flex justify-center items-center' style="background-image: url('assets/background_netflix.jpg');">
-        <h2 class="text-center font-medium text-5xl my-4 text-gray-100">
-            Who's watching ?
-        </h2>
+<section class='min-h-screen py-20 md:py-0 flex-col flex justify-center items-center'
+    style="background-image: url('assets/background_netflix.jpg');">
+    <h2 class="text-center font-medium text-5xl my-4 text-gray-100">
+        Who's watching ?
+    </h2>
 
-        <div class="flex flex-wrap justify-center items-center w-10/12  md:w-6/12">
-            {% for profile in profiles %}
-            <a href="{% url 'netflixapp:movie-list' profile_id=profile.uuid %}">
-                <div class="w-32 h-32 m-4  bg-blue-500 rounded-md cursor-pointer justify-center items-center flex-col flex">
-                    <p class="text-6xl" style="font-weight: 900;">{{ profile.name|slice:":1" }}</p>
-                    <p>{{ profile.name }}</p>
-                </div>
-            </a>
-            {% endfor %}
-            
+    <div class="flex flex-wrap justify-center items-center w-10/12 md:w-6/12">
+        {% for profile in profiles %}
+        <div class="profile-card {% if profile.age_limit == 'Kids' %}kid-profile{% endif %}">
+            <div class="text-section">
+                <p>{{ profile.name|slice:":1" }}</p>
+                <p>{{ profile.name }}</p>
+            </div>
+            <div class="button-group">
+                <a href="{% url 'netflixapp:home' profile.uuid %}" class="enter">Enter</a>
+                <a href="{% url 'netflixapp:profile-delete' profile.uuid %}" class="delete">Delete</a>
+            </div>
         </div>
-        <div class="flex justify-center items-center">
-            <a href="{% url 'netflixapp:profile-create' %}" class="px-4 py-2 rounded-md outline-none bg-gray-400 text-gray-100">
-                Add A New Profile
-            </a>
-        </div>
-    </section>
+        {% endfor %}
+    </div>
+<style>
+    .profile-card {
+    width: 8rem;
+    height: 8rem;
+    margin: 1rem;
+    background: linear-gradient(135deg, #3b82f6, #1e40af); 
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+   
+    .kid-profile {
+    background: linear-gradient(135deg, #facc15, #f59e0b); 
+    }
+
+    .profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Text section */
+    .profile-card .text-section {
+    color: #fff;
+    text-align: center;
+    }
+
+    .profile-card .text-section p:first-child {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin: 0;
+    }
+
+    .profile-card .text-section p:last-child {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    }
+
+    
+    .profile-card .button-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    }
+
+    .profile-card .button-group a {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    }
+
+    .profile-card .button-group a.enter {
+    background-color: #dc2626;
+    color: #fff;
+    }
+
+    .profile-card .button-group a.enter:hover {
+    background-color: #b91c1c;
+    }
+
+    .profile-card .button-group a.delete {
+    background-color: #4b5563;
+    color: #fff;
+    }
+
+    .profile-card .button-group a.delete:hover {
+    background-color: #374151;
+    }
+</style>
+    <div class="flex justify-center items-center">
+        <a href="{% url 'netflixapp:create-profile' %}" style="display:inline-block;
+          font-size: 14px;
+          padding: 6px 12px;
+          border: 1px solid #f3f4f6; /* light border */
+          border-radius: 6px;
+          background-color: transparent;
+          color: #f3f4f6;
+          text-decoration: none;
+          font-weight: 500;
+          transition: all 0.3s ease;">
+            + Add Profile
+        </a>
+
+    </div>
+</section>
 
 {% endblock content %}

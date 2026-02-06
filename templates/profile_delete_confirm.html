@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class='min-h-screen py-20 md:py-0 flex-col flex justify-center items-center'
+    style="background-image: url('assets/background_netflix.jpg');">
+    <div class="delete-profile-container">
+    <h2>Delete Profile</h2>
+    <p>Are you sure you want to delete <strong>{{ profile.name }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="button-group">
+            <a href="{% url 'netflixapp:profile-list' %}">Cancel</a>
+            <button type="submit">Delete</button>
+        </div>
+    </form>
+</div>
+
+    <style>
+.delete-profile-container {
+    max-width: 400px;
+    margin: 100px auto;
+    background-color: #1f2937; /* Tailwind's gray-900 */
+    padding: 24px;
+    border-radius: 8px;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.delete-profile-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: white; /* soft red accent */
+    text-align: center;
+}
+
+
+.delete-profile-container p {
+    margin-bottom: 24px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.delete-profile-container .button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.delete-profile-container a {
+    padding: 10px 20px;
+    background-color: #4b5563; /* Tailwind gray-600 */
+    border-radius: 6px;
+    text-decoration: none;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+}
+
+.delete-profile-container a:hover {
+    background-color: #6b7280; /* lighter gray */
+}
+
+
+.delete-profile-container button {
+    padding: 10px 20px;
+    background-color: #dc2626; /* Tailwind red-600 */
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-profile-container button:hover {
+    background-color: #b91c1c; /* darker red */
+}
+
+</style>
+</section>
+
+{% endblock content %}

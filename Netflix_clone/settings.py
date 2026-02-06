@@ -9,11 +9,18 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
-from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
+from pathlib import Path
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+
+#API key
+TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
 
 # Quick-start development settings - unsuitable for production
@@ -142,7 +149,7 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'account_login'
 ACCOUNT_LOGIN_METHODS = {'email'}
 
 ACCOUNT_SIGNUP_FIELDS = [
@@ -154,5 +161,5 @@ ACCOUNT_SIGNUP_FIELDS = [
 
 
 ACCOUNT_EMAIL_VERIFICATION='none'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'netflixapp:profile-list'
+LOGOUT_REDIRECT_URL = 'account_login'

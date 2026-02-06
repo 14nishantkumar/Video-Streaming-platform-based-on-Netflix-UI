@@ -1,102 +1,158 @@
-import imp
-from django.shortcuts import redirect, render
+import random as rnd
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from . forms import ProfileForm
-from . models import Profile, Movie
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView
+from django.urls import reverse
+from django.http import JsonResponse
 
-class home(View):
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('netflixapp:profile-list')
-        return render(request, 'index.html')
+from .forms import ProfileForm
+from .models import Profile
 
-method_decorator(login_required, name='dispatch')
-class ProfileList(View):
-    def get(self, request, *args, **kwargs):
-        
-        profiles = request.user.profiles.all()
+from .services.tmdb import (
+    fetch_trending_movies,
+    fetch_popular_movies,
+    fetch_top_rated_movies,
+    fetch_movie_detail,
+    fetch_movie_trailer,
+    fetch_kids_movies
+)
 
-        context = {
-            'profiles':profiles
-        }
-        return render(request, 'profilelist.html', context)
 
-method_decorator(login_required, name='dispatch')
-class ProfileCreate(View):
-    def get(self, request, *args, **kwargs):
-        form = ProfileForm()
-        context = {
-            'form':form
-        }
-        return render(request, 'profilecreate.html', context)
+# LANDING
+def landing(request):
+    """
+    Public landing page.
+    Logged-in users go to profile selection.
+    """
+    if request.user.is_authenticated:
+        return redirect("netflixapp:profile-list")
 
-    def post(self, request, *args, **kwargs):
-        form = ProfileForm(request.POST or None)
-        if form.is_valid():
-            profile = Profile.objects.create(**form.cleaned_data)
-            if profile:
-                request.user.profiles.add(profile)
-                return redirect('netflixapp:profile-list')
-        context = {
-            'form':form
-        }
-        return render(request, 'profilecreate.html', context)
+    return render(request, "landing.html")
 
-method_decorator(login_required, name='dispatch')
+
+# PROFILE LIST 
+@login_required
+def ProfileList(request):
+    profiles = Profile.objects.filter(user=request.user)
+    return render(request, "profilelist.html", {"profiles": profiles})
+
+
+# PROFILE CREATE
+class ProfileCreate(LoginRequiredMixin, CreateView):
+    model = Profile
+    form_class = ProfileForm
+    template_name = "profilecreate.html"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("netflixapp:profile-list")
+
+
+# PROFILE DELETE 
+@login_required
+def ProfileDelete(request, uuid):
+    profile = get_object_or_404(Profile, uuid=uuid, user=request.user)
+
+    if request.method == "POST":
+        profile.delete()
+        return redirect("netflixapp:profile-list")
+
+    return render(request, "profile_delete_confirm.html", {"profile": profile})
+
+
+#HOME 
+@login_required
+def home(request, profile_uuid):
+    
+    profile = get_object_or_404(Profile, uuid=profile_uuid, user=request.user)
+
+    
+    if profile.is_kid:
+        movies = fetch_kids_movies(page=1)
+        trending = fetch_kids_movies(page=1)
+    else:
+        movies = fetch_popular_movies(page=1)
+        trending = fetch_trending_movies(page=1)
+
+    banner_movie = rnd.choice(trending) if trending else None
+
+    return render(
+        request,
+        "home.html",
+        {
+            "profile": profile,
+            "movies": movies,
+            "banner_movie": banner_movie,
+        },
+    )
+
+
+# MOVIE DETAIL 
+@login_required
+def movie_detail(request, profile_uuid, movie_id):
+    """
+    Movie info page with trailer.
+    """
+    profile = get_object_or_404(Profile, uuid=profile_uuid, user=request.user)
+
+    movie = fetch_movie_detail(movie_id)
+    trailer_key = fetch_movie_trailer(movie_id)
+
+    return render(
+        request,
+        "movie_detail.html",
+        {
+            "movie": movie,
+            "trailer_key": trailer_key,
+            "profile": profile,
+        },
+    )
+
+@login_required
+def load_more_movies(request):
+    page = int(request.GET.get("page", 1))
+    category = request.GET.get("category", "popular")
+
+    category_map = {
+        "popular": fetch_popular_movies,
+        "trending": fetch_trending_movies,
+        "top_rated": fetch_top_rated_movies,
+    }
+
+    fetch_function = category_map.get(category, fetch_popular_movies)
+    movies = fetch_function(page)
+
+    return JsonResponse({"movies": movies})
+
+
+@method_decorator(login_required, name='dispatch')
 class MovieList(View):
-    def get(self, request, profile_id, *args, **kwargs):
-        try:
-            profile = Profile.objects.get(uuid=profile_id)
+    def get(self, request, profile_uuid, *args, **kwargs):
+        profile = get_object_or_404(
+            Profile,
+            uuid=profile_uuid,
+            user=request.user
+        )
 
-            # Security check: profile must belong to logged-in user
-            if profile not in request.user.profiles.all():
-                return redirect('netflixapp:profile-list')
+        page = int(request.GET.get("page", 1))
 
-            # Filter movies based on profile age limit
-            movies = Movie.objects.filter(age_limit=profile.age_limit)
+        if profile.is_kid:
+            movies = fetch_kids_movies(page=page)
+        else:
+            movies = fetch_popular_movies(page=page)
 
-            # ⭐ Latest movie for hero section
-            latest_movie = movies.order_by('-created').first()
+        context = {
+            "profile": profile,
+            "movies": movies,
+            "page": page,
+            "next_page": page + 1,
+            "prev_page": page - 1 if page > 1 else None,
+        }
 
-            context = {
-                'movies': movies,
-                'latest_movie': latest_movie,
-                'profile': profile,
-            }
-
-            return render(request, 'movielist.html', context)
-
-        except Profile.DoesNotExist:
-            return redirect('netflixapp:profile-list')
-
-
-method_decorator(login_required, name='dispatch')
-class MovieDetail(View):
-    def get(self, request, movie_id, *args, **kwargs):
-        try:
-            movie = Movie.objects.get(uuid=movie_id)
-            
-            context = {
-                'movie':movie
-            }
-
-            return render(request, 'moviedetail.html', context)
-        except Movie.DoesNotExist:
-            return redirect('netflixapp:profile-list')
-
-method_decorator(login_required, name='dispatch')
-class PlayMovie(View):
-    def get(self, request, movie_id, *args, **kwargs):
-        try:
-            movie = Movie.objects.get(uuid=movie_id)
-            movie = movie.video.values()
-            
-            context = {
-                'movie':list(movie)
-            }
-
-            return render(request, 'playmovie.html', context)
-        except Movie.DoesNotExist:
-            return redirect('netflixapp:profile-list')
+        return render(request, "movielist.html", context)
