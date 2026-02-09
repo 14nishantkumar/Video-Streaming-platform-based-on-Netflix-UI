@@ -10,7 +10,9 @@ The project includes **user authentication, multiple profile management, and dyn
 - 🔐 User authentication (Login / Signup / Logout) using **Django Allauth**
 - 👤 Multiple **profiles per user** (Kids & Adult support)
 - 🎥 Movie listing and **movie detail page**
+- 📄 **Pagination for movie lists** to efficiently browse large collections
 - 🖼 Dynamic posters, overview, and trailer integration
+- ▶ Embedded **YouTube trailer playback**
 - 🌙 Netflix-style **dark responsive UI**
 - 🧭 Secure routing using **profile UUID**
 - 🗄 SQLite database integration
@@ -75,16 +77,25 @@ python manage.py runserver
 http://127.0.0.1:8000
 ```
 ---
-## 📸 Screenshots (Add Later)
+## 📸 Screenshots
 
 ### Signup Page
-![Home](Screenshots/Signup_page.PNG)
+![Signup](Screenshots/Signup_page.PNG)
 
 ### Login Page
 ![Login](Screenshots/Login_page.PNG)
 
 ### Profile Selection
 ![Profile](Screenshots/Profiles.PNG)
+
+### Movie List
+![List](Screenshots/Movie_list.PNG)
+
+### Movie Detail Page
+![Detail](Screenshots/Movie_detail.PNG)
+
+### Movie List with Pagination
+![Pagination](Screenshots/pagination.PNG)
 
 ---
 ## 📈 Future Improvements
