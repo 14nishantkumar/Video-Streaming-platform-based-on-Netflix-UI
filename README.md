@@ -75,3 +75,25 @@ python manage.py runserver
 http://127.0.0.1:8000
 ```
 ---
+## 📸 Screenshots (Add Later)
+
+- Login Page
+
+- Profile Selection
+
+- Movie List
+
+- Movie Detail Page
+
+---
+## 📈 Future Improvements
+
+- ▶ Video streaming player
+
+- ❤️ Watchlist feature
+
+- ⏳ Continue watching section
+
+- 🌐 Full TMDB API auto-sync
+
+- ☁ Deployment (Render / AWS)
