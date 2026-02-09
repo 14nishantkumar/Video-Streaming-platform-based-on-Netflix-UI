@@ -78,13 +78,13 @@ http://127.0.0.1:8000
 ## 📸 Screenshots (Add Later)
 
 ### Signup Page
-![Home](Screenshots/Signup_page.png)
+![Home](Screenshots/Signup_page.PNG)
 
 ### Login Page
-![Login](Screenshots/Login_page.png)
+![Login](Screenshots/Login_page.PNG)
 
 ### Profile Selection
-![Profile](Screenshots/Profiles.png)
+![Profile](Screenshots/Profiles.PNG)
 
 ---
 ## 📈 Future Improvements
