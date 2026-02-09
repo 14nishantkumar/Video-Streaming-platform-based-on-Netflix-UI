@@ -77,13 +77,14 @@ http://127.0.0.1:8000
 ---
 ## 📸 Screenshots (Add Later)
 
-- Login Page
+### Signup Page
+![Home](screenshots/Signup_page.png)
 
-- Profile Selection
+### Login Page
+![Login](screenshots/Login_page.png)
 
-- Movie List
-
-- Movie Detail Page
+### Profile Selection
+![Profile](screenshots/Profiles.png)
 
 ---
 ## 📈 Future Improvements
