@@ -42,7 +42,7 @@ The project includes **user authentication, multiple profile management, and dyn
 ## ⚙️ Installation & Setup
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/your-username/netflix-clone-django.git
+git clone https://github.com/14nishantkumar/Video-Streaming-platform-based-on-Netflix-UI.git
 cd netflix-clone-django
 ```
 
