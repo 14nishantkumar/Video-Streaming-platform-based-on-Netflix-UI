@@ -72,6 +72,7 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+**⚠️ To run this project, you must generate your own TMDB API key and add it to the project .env file before starting the server.**
 ### Open in browser:
 ```bash
 http://127.0.0.1:8000
