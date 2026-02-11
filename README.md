@@ -46,11 +46,11 @@ git clone https://github.com/your-username/netflix-clone-django.git
 cd netflix-clone-django
 ```
 
-## 2️⃣ Create virtual environment
+### 2️⃣ Create virtual environment
 ```bash
 python -m venv myworld
 ```
-##3️⃣ Activate virtual environment
+### 3️⃣ Activate virtual environment
 **Windows**
 ```bash
 myworld\Scripts\activate
@@ -59,20 +59,20 @@ myworld\Scripts\activate
 ``` bash
 source myworld/bin/activate
 ```
-##4️⃣ Install dependencies
+### 4️⃣ Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-##5️⃣ Run migrations
+### 5️⃣ Run migrations
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
-##6️⃣ Start development server
+### 6️⃣ Start development server
 ```bash
 python manage.py runserver
 ```
-## Open in browser:
+### Open in browser:
 ```bash
 http://127.0.0.1:8000
 ```
